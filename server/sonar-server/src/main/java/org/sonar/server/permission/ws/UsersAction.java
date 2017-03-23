@@ -103,7 +103,7 @@ public class UsersAction implements PermissionsWsAction {
       Optional<ProjectId> projectId = support.findProjectId(dbSession, request);
       checkProjectAdmin(userSession, org.getUuid(), projectId);
 
-      PermissionQuery query = buildPermissionQuery(request, projectId);
+      PermissionQuery query = buildPermissionQuery(request, org, projectId);
       List<UserDto> users = findUsers(dbSession, org, query);
       int total = dbClient.userPermissionDao().countUsers(dbSession, org.getUuid(), query);
       List<UserPermissionDto> userPermissions = findUserPermissions(dbSession, org, users, projectId);
@@ -113,10 +113,11 @@ public class UsersAction implements PermissionsWsAction {
     }
   }
 
-  private static PermissionQuery buildPermissionQuery(Request request, Optional<ProjectId> project) {
+  private static PermissionQuery buildPermissionQuery(Request request, OrganizationDto organization, Optional<ProjectId> project) {
     String textQuery = request.param(Param.TEXT_QUERY);
     String permission = request.param(PARAM_PERMISSION);
     PermissionQuery.Builder permissionQuery = PermissionQuery.builder()
+      .setOrganizationUuid(organization.getUuid())
       .setPermission(permission)
       .setPageIndex(request.mandatoryParamAsInt(Param.PAGE))
       .setPageSize(request.mandatoryParamAsInt(Param.PAGE_SIZE))
@@ -171,6 +172,7 @@ public class UsersAction implements PermissionsWsAction {
     }
     List<String> logins = users.stream().map(UserDto::getLogin).collect(Collectors.toList());
     PermissionQuery query = PermissionQuery.builder()
+      .setOrganizationUuid(org.getUuid())
       .setComponentUuid(project.isPresent() ? project.get().getUuid() : null)
       .withAtLeastOnePermission()
       .build();

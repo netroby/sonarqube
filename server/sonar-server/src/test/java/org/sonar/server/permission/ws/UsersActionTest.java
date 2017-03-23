@@ -59,6 +59,8 @@ public class UsersActionTest extends BasePermissionWsTest<UsersAction> {
     db.users().insertPermissionOnUser(user1, ADMINISTER_QUALITY_GATES);
     db.users().insertPermissionOnUser(user1, ADMINISTER_QUALITY_PROFILES);
     db.users().insertPermissionOnUser(user2, SCAN);
+    db.organizations().addMember(db.getDefaultOrganization(), user1);
+    db.organizations().addMember(db.getDefaultOrganization(), user2);
 
     loginAsAdmin(db.getDefaultOrganization());
     String result = newRequest().execute().getInput();
@@ -273,6 +275,9 @@ public class UsersActionTest extends BasePermissionWsTest<UsersAction> {
     db.users().insertPermissionOnUser(user1, SCAN);
     db.users().insertPermissionOnUser(user2, SCAN);
     db.users().insertPermissionOnUser(user3, ADMINISTER);
+    db.organizations().addMember(db.getDefaultOrganization(), user1);
+    db.organizations().addMember(db.getDefaultOrganization(), user2);
+    db.organizations().addMember(db.getDefaultOrganization(), user3);
   }
 
 }

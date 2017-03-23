@@ -220,7 +220,7 @@ public class BulkApplyTemplateActionTest extends BasePermissionWsTest<BulkApplyT
 
   private List<String> selectProjectPermissionGroups(ComponentDto project, String permission) {
     PermissionQuery query = PermissionQuery.builder().setPermission(permission).setComponentUuid(project.uuid()).build();
-    return db.getDbClient().groupPermissionDao().selectGroupNamesByQuery(db.getSession(), project.getOrganizationUuid(), query);
+    return db.getDbClient().groupPermissionDao().selectGroupNamesByQuery(db.getSession(), query);
   }
 
   private List<Integer> selectProjectPermissionUsers(ComponentDto project, String permission) {
